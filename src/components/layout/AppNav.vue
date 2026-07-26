@@ -3,8 +3,10 @@ import { ref, onMounted, onUnmounted } from 'vue'
 
 const scrolled = ref(false)
 const mobileOpen = ref(false)
+const activeSection = ref('')
 let sentinel = null
-let observer = null
+let sentinelObserver = null
+let sectionObserver = null
 
 const links = [
   { label: 'About', href: '#about' },
@@ -26,17 +28,34 @@ onMounted(() => {
     'position:absolute;top:0;left:0;width:1px;height:32px;pointer-events:none;'
   document.body.prepend(sentinel)
 
-  observer = new IntersectionObserver(
+  sentinelObserver = new IntersectionObserver(
     ([entry]) => {
       scrolled.value = !entry.isIntersecting
     },
     { threshold: 0 },
   )
-  observer.observe(sentinel)
+  sentinelObserver.observe(sentinel)
+
+  const sectionIds = links.map((l) => l.href.slice(1))
+  const sections = sectionIds.map((id) => document.getElementById(id)).filter(Boolean)
+
+  sectionObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          activeSection.value = entry.target.id
+        }
+      }
+    },
+    { rootMargin: '-40% 0px -55% 0px', threshold: 0 },
+  )
+
+  sections.forEach((el) => sectionObserver.observe(el))
 })
 
 onUnmounted(() => {
-  observer?.disconnect()
+  sentinelObserver?.disconnect()
+  sectionObserver?.disconnect()
   sentinel?.remove()
 })
 </script>
@@ -58,7 +77,12 @@ onUnmounted(() => {
           v-for="link in links"
           :key="link.href"
           :href="link.href"
-          class="text-sm text-text-secondary hover:text-text-primary transition-colors duration-200"
+          :class="[
+            'text-sm transition-colors duration-200',
+            activeSection === link.href.slice(1)
+              ? 'text-accent'
+              : 'text-text-secondary hover:text-text-primary',
+          ]"
           @click.prevent="handleNav(link.href)"
         >
           {{ link.label }}
@@ -70,6 +94,14 @@ onUnmounted(() => {
           class="text-sm text-text-muted hover:text-text-primary transition-colors duration-200"
         >
           GitHub
+        </a>
+        <a
+          href="https://linkedin.com/in/reganputra"
+          target="_blank"
+          rel="noopener"
+          class="text-sm text-text-muted hover:text-text-primary transition-colors duration-200"
+        >
+          LinkedIn
         </a>
       </div>
 
@@ -102,7 +134,12 @@ onUnmounted(() => {
           v-for="link in links"
           :key="link.href"
           :href="link.href"
-          class="text-sm text-text-secondary hover:text-text-primary transition-colors"
+          :class="[
+            'text-sm transition-colors',
+            activeSection === link.href.slice(1)
+              ? 'text-accent'
+              : 'text-text-secondary hover:text-text-primary',
+          ]"
           @click.prevent="handleNav(link.href)"
         >
           {{ link.label }}
@@ -114,6 +151,14 @@ onUnmounted(() => {
           class="text-sm text-text-muted hover:text-text-primary transition-colors"
         >
           GitHub
+        </a>
+        <a
+          href="https://linkedin.com/in/reganputra"
+          target="_blank"
+          rel="noopener"
+          class="text-sm text-text-muted hover:text-text-primary transition-colors"
+        >
+          LinkedIn
         </a>
       </div>
     </div>

@@ -29,8 +29,22 @@ onMounted(() => {
 </script>
 
 <template>
-  <section class="min-h-[100dvh] flex items-center pt-16">
-    <div class="max-w-[1400px] mx-auto px-6 w-full">
+  <section class="relative min-h-[100dvh] flex items-center pt-16 overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div
+        class="absolute inset-0"
+        style="
+          background-image:
+            linear-gradient(rgba(34, 211, 238, 0.035) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(34, 211, 238, 0.035) 1px, transparent 1px);
+          background-size: 64px 64px;
+        "
+      />
+      <div class="absolute top-[-300px] right-[-200px] w-[600px] h-[600px] rounded-full bg-accent/5 blur-[120px]" />
+      <div class="absolute bottom-[-200px] left-[-200px] w-[400px] h-[400px] rounded-full bg-accent/3 blur-[100px]" />
+    </div>
+
+    <div class="max-w-[1400px] mx-auto px-6 w-full relative z-10">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
         <div class="flex flex-col gap-6">
           <div class="flex items-center gap-2 text-accent">
