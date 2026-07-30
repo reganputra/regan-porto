@@ -153,7 +153,7 @@ onUnmounted(() => {
           GitHub
         </a>
         <a
-          href="https://linkedin.com/in/reganputra"
+          href="https://www.linkedin.com/in/regan-putra-ramadhan-82165a253/"
           target="_blank"
           rel="noopener"
           class="text-sm text-text-muted hover:text-text-primary transition-colors"
